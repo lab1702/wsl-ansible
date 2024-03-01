@@ -1,0 +1,94 @@
+---
+- hosts: localhost
+  connection: local
+  become: true
+
+  tasks:
+#  - name: Show facts available on the system
+#    debug:
+#      var: ansible_facts
+
+  - name: update installed packages
+    apt:
+      name: "*"
+      state: latest
+      update_cache: true
+
+  - name: install rstudio server
+    apt:
+      deb: https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2023.12.1-402-amd64.deb
+      state: present
+
+  - name: install generic packages
+    apt:
+      pkg:
+        - build-essential
+        - git
+        - cmake
+        - ccache
+        - curl
+        - wget
+        - r-base
+        - r-base-dev
+        - libxml2-dev
+        - libcurl4-openssl-dev
+        - libssl-dev
+        - libx11-dev
+        - libglu1-mesa-dev
+        - libftgl-dev
+        - libfontconfig1-dev
+        - libcairo2-dev
+        - libgsl-dev
+        - libudunits2-dev
+        - libgdal-dev
+        - libmpfr-dev
+        - libgmp-dev
+        - libharfbuzz-dev
+        - libfribidi-dev
+        - libv8-dev
+        - libunwind-dev
+        - libarchive-dev
+        - python3-virtualenv
+        - rust-all
+        - hexyl
+        - bvi
+        - vim
+        - multitail
+        - recutils
+        - ispell
+        - ripgrep
+        - fd-find
+        - fzf
+        - gdu
+        - ncdu
+        - ranger
+        - mc
+        - rmlint
+        - neofetch
+        - cpufetch
+        - sloccount
+        - figlet
+        - graphviz
+        - texlive-full
+        - poppler-utils
+        - html2text
+        - dos2unix
+        - btop
+        - htop
+        - nvtop
+      state: present
+
+  - name: autoremove packages
+    apt:
+      autoremove: yes
+
+  - name: autoclean packages
+    apt:
+      autoclean: yes
+
+  - name: add user to groups
+    user:
+      name: "{{ host_user }}"
+      groups:
+        - docker
+      append: yes
